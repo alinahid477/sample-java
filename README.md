@@ -1,1 +1,1 @@
-# sample-java
+# sample-jenkins-pipeline
