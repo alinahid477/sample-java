@@ -42,6 +42,11 @@ spec:
     volumeMounts:
     - mountPath: "/root/.m2"
       name: m2
+  - name: kpack
+    image: kpack/kp
+    command:
+    - cat
+    tty: true
 ''') {
     node(POD_LABEL) {
         
@@ -57,30 +62,28 @@ spec:
           }
         }
         
-        stage("DOCKER") {
-          container('docker') {
-            withCredentials([usernamePassword(credentialsId: 'dockerhub-cred', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-              sh """ 
-                  docker login -u ${USERNAME} -p ${PASSWORD} &&
-                  docker build -t harbor-svc.haas-422.pez.vmware.com/anahid/addservice:latest .
-                  docker logout
-              """    
-                
-            }
-            withCredentials([usernamePassword(credentialsId: 'pvt-registry-cred', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+
+
+        stage("TBS") {
+          container('kpack') {
+            withKubeConfig([credentialsId: 'jenkins-robot-token-tbs',
+                        serverUrl: 'https://i77kmduc86zbn3lvt7hkwiwonpbp-k8s-93180135.ap-southeast-2.elb.amazonaws.com:443',
+                        clusterName: 'testpipeline',
+                        namespace: 'build-service'
+                        ]) {
               sh """
-                  docker login -u ${USERNAME} -p ${PASSWORD} harbor-svc.haas-422.pez.vmware.com &&
-                  docker push harbor-svc.haas-422.pez.vmware.com/anahid/addservice:latest
+                kp image save vmw-calculator-addservice-build --git https://github.com/alinahid477/vmw-calculator-addservice.git --git-revision main --tag anahidcalcacr.azurecr.io/calcaddservice --builder default-builder --wait
               """
             }
           }
+          
         }
         
         stage("K8S") {
           withKubeConfig([credentialsId: 'jenkins-robot-token',
-                      serverUrl: 'https://192.168.220.9:6443',
-                      clusterName: 'apps-g1',
-                      namespace: 'calculator'
+                      serverUrl: 'https://i77kmduc86zbn3lvt7hkwiwonpbp-k8s-93180135.ap-southeast-2.elb.amazonaws.com:443',
+                      clusterName: 'testpipeline',
+                      namespace: 'default'
                       ]) {
             sh 'curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"'
             // sh 'cat $(ls -la | grep config | awk '{print $9}')'
