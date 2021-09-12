@@ -74,7 +74,7 @@ spec:
               sh 'kubectl config view'
               sh 'kubectl get pods'
               sh """
-                kp image save vmw-calculator-addservice-build --git https://github.com/alinahid477/vmw-calculator-addservice.git --git-revision main --tag anahidcalcacr.azurecr.io/calcaddservice --builder default-builder --wait
+                kp image save vmw-calculator-addservice-build --git https://github.com/alinahid477/vmw-calculator-addservice.git --git-revision main --tag anahidcalcacr.azurecr.io/calcaddservice --builder small-builder --wait
               """
             }
           }
