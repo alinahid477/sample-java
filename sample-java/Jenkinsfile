@@ -69,7 +69,7 @@ spec:
             withKubeConfig([credentialsId: 'jenkins-robot',
                         serverUrl: 'https://i77kmduc86zbn3lvt7hkwiwonpbp-k8s-93180135.ap-southeast-2.elb.amazonaws.com:443',
                         clusterName: 'testpipeline',
-                        namespace: 'build-service'
+                        namespace: 'default'
                         ]) {
               sh 'kubectl config view'
               sh 'kubectl get pods'
