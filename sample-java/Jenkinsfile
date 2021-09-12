@@ -71,6 +71,7 @@ spec:
                         clusterName: 'testpipeline',
                         namespace: 'build-service'
                         ]) {
+              sh 'kubectl config view'
               sh 'kubectl get ns'
               sh 'kubectl get pods -n build-service'
               sh """
