@@ -64,7 +64,7 @@ spec:
         
 
 
-        stage("CI-PACKAGE") {
+        stage("CD-TBS") {
           container('kpack') {
             withKubeConfig([credentialsId: 'jenkins-robot',
                         serverUrl: 'https://i77kmduc86zbn3lvt7hkwiwonpbp-k8s-93180135.ap-southeast-2.elb.amazonaws.com:443',
@@ -79,7 +79,7 @@ spec:
           
         }
         
-        stage("K8S") {
+        stage("CD-DEPLOY") {
           withKubeConfig([credentialsId: 'jenkins-robot',
                       serverUrl: 'https://i77kmduc86zbn3lvt7hkwiwonpbp-k8s-93180135.ap-southeast-2.elb.amazonaws.com:443',
                       clusterName: 'testpipeline',
