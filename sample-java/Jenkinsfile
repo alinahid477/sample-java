@@ -71,6 +71,11 @@ spec:
                         clusterName: 'testpipeline',
                         namespace: 'build-service'
                         ]) {
+              sh 'curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"'
+              // sh 'cat $(ls -la | grep config | awk '{print $9}')'
+              sh 'chmod 777 ./kubectl'
+              sh './kubectl get ns'
+              sh './kubectl get pods -n build-service'
               sh """
                 kp image save vmw-calculator-addservice-build --git https://github.com/alinahid477/vmw-calculator-addservice.git --git-revision main --tag anahidcalcacr.azurecr.io/calcaddservice --builder default-builder --wait
               """
