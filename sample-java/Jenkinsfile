@@ -50,17 +50,17 @@ spec:
 ''') {
     node(POD_LABEL) {
         
-        stage("GIT") {
-          git credentialsId: 'pvt-repo-cred', branch: 'main', url: 'https://github.com/alinahid477/vmw-calculator-addservice.git'
-        }
+        // stage("GIT") {
+        //   git credentialsId: 'pvt-repo-cred', branch: 'main', url: 'https://github.com/alinahid477/vmw-calculator-addservice.git'
+        // }
         
-        stage("MAVEN") {
-          container('maven') {
-              sh """
-                  mvn package -DskipTests
-              """
-          }
-        }
+        // stage("MAVEN") {
+        //   container('maven') {
+        //       sh """
+        //           mvn package -DskipTests
+        //       """
+        //   }
+        // }
         
 
 
