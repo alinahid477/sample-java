@@ -1,0 +1,63 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: default-sa
+  namespace: default
+imagePullSecrets:
+- name: acr-regcred
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: default-sa-role
+  namespace: default
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["create","delete","get","list","patch","update","watch"]
+- apiGroups: [""]
+  resources: ["pods/exec"]
+  verbs: ["create","delete","get","list","patch","update","watch"]
+- apiGroups: [""]
+  resources: ["pods/log"]
+  verbs: ["get","list","watch"]
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["create","delete","get","list","patch","watch","update"]
+- apiGroups: [""]
+  resources: ["configmaps"]
+  verbs: ["create","delete","get","list","patch","watch","update"]
+- apiGroups: ["apps","extensions"]
+  resources: ["deployments"]
+  verbs: ["create","delete","get","list","patch","Watch","update"]
+- apiGroups: [""]
+  resources: ["services","endpoints"]
+  verbs: ["create","delete","get","list","patch","watch","update"]
+- apiGroups: [""]
+  resources: ["ingresses"]
+  verbs: ["create","delete","get","list","patch","update"]
+- apiGroups: [""]
+  resources: ["events"]
+  verbs: ["create","patch","watch","list","get","delete"]
+- apiGroups: ["extensions"]
+  resources: ["ingresses"]
+  verbs: ["list","watch","get"]
+- apiGroups: ["extensions"]
+  resources: ["ingresses/status"]
+  verbs: ["update"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: default-sa-role-binding
+  namespace: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: default-sa-role
+subjects:
+- kind: ServiceAccount
+  name: default-sa
+  namespace: default
